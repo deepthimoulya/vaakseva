@@ -112,4 +112,5 @@ sarvam-105b (scheme eligibility from extracted text)
 [Deepthi Moulya V M](https://linkedin.com/in/yourprofile) — CS fresher from Hassan, Karnataka
 (2 km from the Halmidi inscription — oldest Kannada script on earth, 450 AD)
 
-*Read the [blog post](https://dev.to) for the full story behind this project.*
+*Read the [blog post](https://docs.google.com/document/d/1Rz3Q7itqQ9uIVQofTNwkV1iNVqMfgWOHx4umdXqa8XM/edit?usp=sharing) for the full story behind this project.*
+*Check out the demo here [demo](https://vaakseva-bitj6zzlu3wpvlepjddhy4.streamlit.app/) *
