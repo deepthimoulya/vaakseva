@@ -304,59 +304,67 @@ with tab2:
 
     if uploaded_doc:
         st.success(f"Uploaded: {uploaded_doc.name}")
+        file_ext = uploaded_doc.name.split(".")[-1].lower() if "." in uploaded_doc.name else ""
+
         if uploaded_doc.type.startswith("image"):
             st.image(uploaded_doc, caption="Uploaded document", use_container_width=True)
 
         if st.button("🔍 Extract text with Sarvam Vision", use_container_width=True, type="primary"):
-            with st.spinner("Running Sarvam Vision OCR — extracting text from document..."):
+            with st.spinner("Extracting text from document..."):
                 try:
-                    # Save uploaded file
-                    suffix = "." + uploaded_doc.name.split(".")[-1]
-                    tmp_doc = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
-                    tmp_doc.write(uploaded_doc.read())
-                    tmp_doc.close()
-
-                    # Create job
-                    job = client.document_intelligence.create_job(
-                        language=doc_lang,
-                        output_format="md"
-                    )
-                    # Upload file
-                    job.upload_file(tmp_doc.name)
-                    # Start
-                    job.start()
-                    # Wait
-                    status = job.wait_until_complete()
-
-                    # Download output zip
-                    out_zip = tempfile.NamedTemporaryFile(delete=False, suffix=".zip")
-                    out_zip.close()
-                    job.download_output(out_zip.name)
-
-                    # Extract markdown from zip
                     extracted_text = ""
-                    with zipfile.ZipFile(out_zip.name, "r") as z:
-                        for name in z.namelist():
-                            if name.endswith(".md"):
-                                extracted_text = z.read(name).decode("utf-8")
-                                break
-                        if not extracted_text:
-                            # Try JSON
-                            for name in z.namelist():
-                                if name.endswith(".json"):
-                                    import json
-                                    data = json.loads(z.read(name).decode("utf-8"))
-                                    if isinstance(data, list):
-                                        extracted_text = " ".join(
-                                            p.get("text","") for p in data
-                                        )
-                                    break
 
-                    st.session_state["ocr_text"] = extracted_text
-                    st.success("Text extracted!")
+                    # Plain text files — read directly
+                    if file_ext in ["txt"]:
+                        extracted_text = uploaded_doc.read().decode("utf-8")
+                        st.success("Text read from file!")
+
+                    # PDF or Image — use Sarvam Vision API
+                    else:
+                        suffix = "." + file_ext
+                        tmp_doc = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
+                        tmp_doc.write(uploaded_doc.read())
+                        tmp_doc.close()
+
+                        try:
+                            job = client.document_intelligence.create_job(
+                                language=doc_lang,
+                                output_format="md"
+                            )
+                            job.upload_file(tmp_doc.name)
+                            job.start()
+                            job.wait_until_complete()
+
+                            out_zip = tempfile.NamedTemporaryFile(delete=False, suffix=".zip")
+                            out_zip.close()
+                            job.download_output(out_zip.name)
+
+                            with zipfile.ZipFile(out_zip.name, "r") as z:
+                                for name in z.namelist():
+                                    if name.endswith(".md"):
+                                        extracted_text = z.read(name).decode("utf-8")
+                                        break
+                                if not extracted_text:
+                                    for name in z.namelist():
+                                        if name.endswith(".json"):
+                                            import json
+                                            data = json.loads(z.read(name).decode("utf-8"))
+                                            if isinstance(data, list):
+                                                extracted_text = " ".join(
+                                                    p.get("text","") for p in data
+                                                )
+                                            break
+                            st.success("Text extracted with Sarvam Vision!")
+                        except Exception as vision_error:
+                            st.error(f"Vision OCR error: {vision_error}")
+
+                    if extracted_text.strip():
+                        st.session_state["ocr_text"] = extracted_text
+                    else:
+                        st.warning("No text could be extracted from this file.")
 
                 except Exception as e:
-                    st.error(f"Vision OCR error: {e}")
+                    st.error(f"Error reading file: {e}")
 
         if "ocr_text" in st.session_state:
             ocr_text = st.session_state["ocr_text"]
