@@ -154,11 +154,24 @@ with tab1:
         st.info(f"**Sample:** *\"{default_text}\"*")
         st.caption("Real code-mixed query — mixes local script with English terms like 'eligible', 'apply', 'BPL card'")
 
+        # Allow user to type their own question
+        custom_text = st.text_area(
+            "✏️ Or type your own question (in your language)",
+            placeholder=f"e.g. {default_text}",
+            height=80,
+            help="Type in your own language — Kannada, Hindi, Tamil, Telugu etc. Mix with English words freely."
+        )
+        # Use custom text if provided, else use sample
+        tts_text = custom_text.strip() if custom_text.strip() else default_text
+
+        if custom_text.strip():
+            st.caption(f"Using your question: *"{tts_text}"*")
+
         if st.button("🔊 Generate audio with Bulbul v2", use_container_width=True):
             with st.spinner("Generating with Bulbul v2 TTS..."):
                 try:
                     tts = client.text_to_speech.convert(
-                        text=default_text,
+                        text=tts_text,
                         target_language_code=lang_code,
                         speaker="anushka"
                     )
