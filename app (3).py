@@ -270,7 +270,7 @@ with tab1:
 
             lo, hi = SCRIPT_RANGES.get(lang_name,('\u0C80','\u0CFF'))
             native_tokens = [w for w in codemix_text.split() if any(lo<=c<=hi for c in w)]
-            en_tokens     = [w for w in codemix_text.split() if w.isalpha() and all(ord(c)<128 for c in w)]
+            en_tokens     = [w for w in codemix_text.split() if w.replace("-","").isalpha() and all(ord(c)<128 for c in w) and not any(lo<=c<=hi for c in w)]
             native_html = "".join(f'<span class="tok-kn">{w}</span>' for w in native_tokens) or "<i>none</i>"
             en_html     = "".join(f'<span class="tok-en">{w}</span>' for w in en_tokens) or "<i>none</i>"
 
