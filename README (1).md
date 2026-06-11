@@ -1,18 +1,50 @@
-# VaakSeva — Indic Voice Q&A powered by Sarvam AI
+# VaakSeva — Indic Voice + Document Assistant for Government Schemes
 
-A voice-first Q&A web app for code-mixed Indian language inputs. Built on Sarvam's Saaras v3 (STT), Bulbul v2 (TTS), and sarvam-105b (LLM).
+A voice-first and document-aware government scheme eligibility assistant for Indian users. Built on Sarvam AI's full stack — Saaras v3 (STT), Bulbul v2 (TTS), Sarvam Vision (OCR), and sarvam-105b (LLM).
 
-[![Open App](https://img.shields.io/badge/Live%20Demo-Streamlit-FF4B4B?logo=streamlit)](https://your-app.streamlit.app)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-FF4B4B?logo=streamlit)](https://vaakseva-bitj6zzlu3wpvlepjddhy4.streamlit.app)
+[![Sarvam AI](https://img.shields.io/badge/Powered%20by-Sarvam%20AI-5B4CF5)](https://sarvam.ai)
+
+---
 
 ## The problem this solves
 
-Real Indian users don't speak in clean, formal text. A query like *"Nanu hogbekitta but bus late aagide"* mixes Kannada script and English in the same sentence. Standard embedding models can't handle this — the query spans two scripts and breaks RAG retrieval silently.
+Real Indian users don't speak in clean, formal text. A Kannada speaker asking about a government scheme says:
 
-**VaakSeva** demonstrates:
-1. How Saaras v3 transcribes code-mixed speech in 3 modes (`transcribe` / `translate` / `codemix`)
-2. Why `codemix` output breaks retrieval (visualised with token analysis)
-3. Why `translate` mode is the correct retrieval key for Indic voice RAG
-4. How sarvam-105b answers the question grounded in a knowledge base
+> *"ಪಿಎಂ ಆವಾಸ್ ಯೋಜನೆಗೆ apply ಮಾಡಬಹುದಾ? ನಾನು BPL card holder ಇದ್ದೇನೆ."*
+
+This is **code-mixing** — the query spans Kannada script and English in the same sentence. Standard STT and embedding models fail on this silently. VaakSeva handles it natively using Sarvam's Indic-first models.
+
+---
+
+## Features
+
+**Tab 1 — 🎙️ Voice Q&A**
+- Generate or upload audio in 10 Indian languages
+- Transcribe using Saaras v3 in 3 modes: `transcribe`, `translate`, `codemix`
+- Visualise the code-mixed retrieval gap (which tokens are Indic vs English)
+- Answer using sarvam-105b grounded in real government scheme knowledge base
+
+**Tab 2 — 📄 Document OCR**
+- Upload ration card, Aadhaar, income certificate (PDF or image)
+- Sarvam Vision extracts text from Indian-language documents
+- sarvam-105b determines which schemes you may be eligible for
+
+**Schemes covered:** PM Awas Yojana · PM Kisan · Ayushman Bharat · PM Ujjwala · Sukanya Samriddhi · MUDRA Loan · National Scholarship Portal
+
+---
+
+## Why Sarvam — not just any STT
+
+| Challenge | Other models | Sarvam |
+|-----------|-------------|--------|
+| Code-mixed Indic speech | Fails or low accuracy | Native support via `codemix` mode |
+| Indian-language documents | Poor OCR accuracy | Sarvam Vision trained on 22 Indian scripts |
+| Indic script understanding | Secondary support | Purpose-built for India |
+
+**Key insight:** Use Saaras v3's `translate` mode output — not the raw transcript — as the retrieval query. This collapses dual-script ambiguity into clean English embeddings.
+
+---
 
 ## Setup
 
@@ -26,22 +58,58 @@ streamlit run app.py
 
 Get a free API key at [dashboard.sarvam.ai](https://dashboard.sarvam.ai)
 
+---
+
+## Deploy on Streamlit Cloud (free)
+
+1. Push repo to GitHub
+2. Go to [share.streamlit.io](https://share.streamlit.io) → New app → select repo → `app.py`
+3. Add secret: `SARVAM_API_KEY = "your_key"`
+4. Deploy
+
+---
+
 ## APIs used
 
 | API | Model | Purpose |
 |-----|-------|---------|
 | Text-to-Speech | Bulbul v2 | Generate code-mixed audio sample |
-| Speech-to-Text | Saaras v3 | Transcribe in transcribe / translate / codemix modes |
-| Chat | sarvam-105b | Answer questions grounded in knowledge base |
+| Speech-to-Text | Saaras v3 | Transcribe / translate / codemix modes |
+| Document Intelligence | Sarvam Vision | OCR on Indian-language documents |
+| Chat | sarvam-105b | Scheme eligibility answers |
 
-## Deploy on Streamlit Cloud (free)
+---
 
-1. Push this repo to GitHub
-2. Go to [share.streamlit.io](https://share.streamlit.io) → New app
-3. Select this repo → `app.py`
-4. Add `SARVAM_API_KEY` in App secrets
-5. Deploy
+## Architecture
+
+```
+User speaks (code-mixed Indic)
+        ↓
+Bulbul v2 TTS (text → audio)
+        ↓
+Saaras v3 STT (3 modes)
+  ├── transcribe → original script
+  ├── codemix   → mixed-script (shows the gap)
+  └── translate → clean English ← used as retrieval query
+        ↓
+sarvam-105b (grounded in scheme knowledge base)
+        ↓
+Eligibility answer in English
+
+OR
+
+User uploads document (PDF/image)
+        ↓
+Sarvam Vision OCR
+        ↓
+sarvam-105b (scheme eligibility from extracted text)
+```
+
+---
 
 ## Built by
 
-[Deepthi Moulya V M](https://linkedin.com) — CS fresher from Hassan, Karnataka
+[Deepthi Moulya V M](https://linkedin.com/in/yourprofile) — CS fresher from Hassan, Karnataka
+(2 km from the Halmidi inscription — oldest Kannada script on earth, 450 AD)
+
+*Read the [blog post](https://dev.to) for the full story behind this project.*
