@@ -30,48 +30,91 @@ st.markdown("""
 
 # ── Knowledge base ───────────────────────────────────────────
 SCHEME_KB = """
-PM Awas Yojana Gramin — Rural housing scheme:
-- Eligibility: BPL families, SC/ST, minorities, persons with disabilities, annual income below 3 lakhs
-- Benefit: Up to Rs 1.20 lakh plains, Rs 1.30 lakh hilly areas
-- Apply: Gram Panchayat or AwaasSoft portal
-- Documents: Aadhaar, bank account, BPL certificate
+=== PM AWAS YOJANA GRAMIN (PMAY-G) — Rural Housing ===
+- Who it's for: Homeless or kutcha house families in rural areas
+- Eligibility: BPL families, SC/ST, minorities, persons with disabilities, manual scavengers, annual income below Rs 3 lakhs
+- Not eligible: Families owning pucca house, government employees, income tax payers, families with motorised vehicles
+- Benefit: Rs 1.20 lakh (plains), Rs 1.30 lakh (hilly/difficult areas), additional Rs 12,000 for toilet under SBM
+- How to apply: Contact Gram Panchayat or apply via AwaasSoft portal (awaassoft.nic.in)
+- Documents: Aadhaar card, bank account passbook, BPL certificate, job card (MGNREGA), photo
 
-PM Kisan Samman Nidhi — Farmer income support:
-- Eligibility: All landholding farmer families with cultivable land
-- Benefit: Rs 6000 per year in 3 instalments of Rs 2000
-- Apply: pmkisan.gov.in or nearest CSC centre
-- Documents: Aadhaar, land records (Khasra/Khatauni), bank account
+=== PM AWAS YOJANA URBAN (PMAY-U) — Urban Housing ===
+- Who it's for: Urban poor, slum dwellers, EWS/LIG families
+- Eligibility: EWS (income up to Rs 3 lakh), LIG (Rs 3-6 lakh), MIG-I (Rs 6-12 lakh), MIG-II (Rs 12-18 lakh)
+- Benefit: Interest subsidy on home loans (3% to 6.5% depending on category), up to Rs 2.67 lakh subsidy
+- How to apply: pmaymis.gov.in or nearest bank/housing finance company
+- Documents: Aadhaar, income proof, bank account, property documents
 
-Ayushman Bharat PMJAY — Health insurance:
-- Eligibility: Families in SECC database, BPL families
-- Benefit: Rs 5 lakh health cover per family per year, covers hospitalisation, surgery, ICU, medicines
-- Apply: pmjay.gov.in or nearest empanelled hospital
-- Documents: Aadhaar, ration card
+=== PM KISAN SAMMAN NIDHI ===
+- Who it's for: All landholding farmer families across India
+- Eligibility: Farmer families with cultivable land. Not eligible: institutional landholders, government employees, income tax payers, doctors/lawyers/engineers
+- Benefit: Rs 6,000 per year paid in 3 instalments of Rs 2,000 directly to bank account
+- How to apply: pmkisan.gov.in or visit nearest CSC (Common Service Centre)
+- Documents: Aadhaar card, land ownership records (Khasra/Khatauni), bank account, mobile number
 
-PM Ujjwala Yojana — Free LPG connection:
-- Eligibility: Women from BPL households, SC/ST families, PMAY beneficiaries
-- Benefit: Free LPG connection with first refill and stove
-- Apply: Nearest LPG distributor
-- Documents: Aadhaar, BPL/ration card, bank account
+=== AYUSHMAN BHARAT — PMJAY (Health Insurance) ===
+- Who it's for: Poor and vulnerable families needing hospitalisation
+- Eligibility: Families listed in SECC 2011 database, BPL families, construction workers, street vendors, domestic workers. Check at pmjay.gov.in
+- Benefit: Rs 5 lakh health insurance per family per year, covers 1,500+ medical procedures, hospitalisation, surgery, ICU, medicines, pre and post hospitalisation
+- How to apply: Check eligibility at pmjay.gov.in, visit any empanelled government or private hospital with Aadhaar
+- Documents: Aadhaar card, ration card or family ID
 
-Sukanya Samriddhi Yojana — Girl child savings:
-- Eligibility: Parents of girl child below 10 years
-- Benefit: 8.2% interest rate, tax benefit under 80C
-- Minimum: Rs 250/year, maximum Rs 1.5 lakh/year
-- Apply: Post office or any bank
-- Documents: Birth certificate, parent Aadhaar
+=== PM UJJWALA YOJANA (Free LPG Connection) ===
+- Who it's for: Women from poor households without LPG connection
+- Eligibility: Women above 18 years from BPL households, SC/ST families, PM Awas Yojana beneficiaries, Antyodaya Anna Yojana families, forest dwellers, most backward classes
+- Benefit: Free LPG connection (Rs 1,600 worth), first refill free, free stove (EMI option)
+- How to apply: Visit nearest LPG distributor (HP, Bharat, Indane) with documents
+- Documents: Aadhaar card, BPL certificate or ration card, bank account, address proof, passport photo
 
-National Scholarship Portal — Education scholarships:
-- Eligibility: Minority/SC/ST/OBC students, income below 2.5 lakhs
-- Benefit: Pre-matric and post-matric scholarships
-- Apply: scholarships.gov.in
-- Documents: Income certificate, caste certificate, marksheet, Aadhaar
+=== SUKANYA SAMRIDDHI YOJANA (Girl Child Savings) ===
+- Who it's for: Parents or guardians of girl children
+- Eligibility: Girl child below 10 years of age. Maximum 2 accounts per family (one per girl child)
+- Benefit: 8.2% interest rate (highest among small savings schemes), tax exemption under Section 80C, maturity amount fully tax free
+- Investment: Minimum Rs 250 per year, maximum Rs 1.5 lakh per year. Account matures after 21 years or at girl's marriage after age 18
+- How to apply: Any post office or authorised bank (SBI, Bank of Baroda, Canara Bank etc.)
+- Documents: Girl child's birth certificate, parent/guardian Aadhaar, address proof, photograph
 
-Pradhan Mantri Mudra Yojana — Small business loans:
-- Eligibility: Non-corporate small business, shopkeepers, artisans
-- Loan types: Shishu up to 50000, Kishor 50000-5 lakh, Tarun 5-10 lakh
-- Apply: Any bank, MFI, or mudra.org.in
-- Documents: Business plan, Aadhaar, address proof, bank statement
+=== PRADHAN MANTRI MUDRA YOJANA (Business Loans) ===
+- Who it's for: Small business owners, shopkeepers, artisans, vendors, farmers doing allied activities
+- Eligibility: Non-corporate, non-farm small/micro enterprises. No collateral required
+- Loan types:
+  * Shishu: Up to Rs 50,000 (new businesses, street vendors)
+  * Kishor: Rs 50,001 to Rs 5 lakh (existing businesses needing expansion)
+  * Tarun: Rs 5 lakh to Rs 10 lakh (well-established businesses)
+- How to apply: Visit any bank, MFI (Microfinance Institution), NBFC, or mudra.org.in
+- Documents: Aadhaar, PAN card, address proof, business proof, bank statement (6 months), 2 passport photos
+
+=== NATIONAL SCHOLARSHIP PORTAL (NSP) ===
+- Who it's for: Students from economically weaker sections across India
+- Eligibility:
+  * Pre-matric (Class 1-10): Minority students, SC/ST/OBC, income below Rs 1 lakh
+  * Post-matric (Class 11 onwards): Minority students, SC/ST/OBC, income below Rs 2.5 lakhs
+  * Merit-cum-means: Minority students in professional/technical courses, income below Rs 2.5 lakhs
+- Benefit: Rs 1,000 to Rs 20,000 per year depending on scheme and level
+- How to apply: scholarships.gov.in — register with Aadhaar, fill application before deadline (usually October-November)
+- Documents: Income certificate, caste certificate, previous year marksheet, Aadhaar, bank account, institution verification
+
+=== PM JAN DHAN YOJANA (Zero Balance Bank Account) ===
+- Who it's for: Unbanked individuals across India
+- Eligibility: Any Indian citizen above 10 years without a bank account
+- Benefit: Zero balance savings account, RuPay debit card, Rs 1 lakh accident insurance, Rs 30,000 life cover, overdraft facility up to Rs 10,000 after 6 months
+- How to apply: Visit any bank branch or BC (Business Correspondent) point
+- Documents: Aadhaar card or any valid ID proof
+
+=== ATAL PENSION YOJANA (Pension for Unorganised Workers) ===
+- Who it's for: Unorganised sector workers without pension
+- Eligibility: Indian citizens aged 18-40 years with a savings bank account. Not eligible: income tax payers
+- Benefit: Guaranteed pension of Rs 1,000 to Rs 5,000 per month after age 60
+- How to apply: Visit any bank or post office with savings account
+- Documents: Aadhaar, savings bank account, mobile number
+
+=== PM FASAL BIMA YOJANA (Crop Insurance) ===
+- Who it's for: Farmers growing notified crops
+- Eligibility: All farmers (loanee and non-loanee) growing notified crops in notified areas
+- Benefit: Insurance coverage for crop loss due to natural calamities, pests, diseases. Sum insured equals scale of finance
+- Premium: 2% for Kharif crops, 1.5% for Rabi crops, 5% for commercial/horticultural crops
+- How to apply: Nearest bank, CSC centre, or pmfby.gov.in before crop season cutoff date
+- Documents: Land records, Aadhaar, bank account, sowing certificate
 """
 
 # ── Header ───────────────────────────────────────────────────
