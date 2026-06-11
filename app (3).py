@@ -165,7 +165,7 @@ with tab1:
         tts_text = custom_text.strip() if custom_text.strip() else default_text
 
         if custom_text.strip():
-            st.caption(f"Using your question: *"{tts_text}"*")
+           st.caption("Using your question: " + tts_text)
 
         if st.button("🔊 Generate audio with Bulbul v2", use_container_width=True):
             with st.spinner("Generating with Bulbul v2 TTS..."):
