@@ -92,8 +92,8 @@ client = SarvamAI(api_subscription_key=api_key)
 
 # ── Mode tabs ────────────────────────────────────────────────
 tab1, tab2 = st.tabs([
-    "Voice Q&A  (Speech → LLM)",
-    "Document OCR  (Vision → LLM)"
+    "🎙️ Voice Q&A  (Speech → LLM)",
+    "📄 Document OCR  (Vision → LLM)"
 ])
 
 # ════════════════════════════════════════════════════════════
@@ -109,16 +109,16 @@ with tab1:
         "Gujarati":"gu-IN","Punjabi":"pa-IN","Odia":"or-IN",
     }
     SAMPLE_QUESTIONS = {
-        "Kannada":  "PM Awas Yojana ge eligible aagalla, nanu BPL card holder idheeni. Apply maadodu hege?",
-        "Hindi":    "PM Kisan yojana ke liye main eligible hoon kya? Mera 2 acre zameen hai.",
-        "Tamil":    "Ayushman Bharat scheme ku eligible aaguvenu, en family kku 5 members irukku.",
-        "Telugu":   "Mudra loan kosam apply cheyyali, nenu small business start cheyyali anukuntunna.",
-        "Malayalam":"PM Ujjwala Yojana ku eligible aano? Njangal BPL family aanu.",
-        "Marathi":  "Sukanya Samriddhi Yojana madhe account kadhaycha aahe, mulgi 5 varshachi aahe.",
-        "Bengali":  "PM Awas Yojana te apply korte chai, aamar BPL card ache.",
-        "Gujarati": "Mudra loan mate apply karvo chhe, maro business 2 lakh no chhe.",
-        "Punjabi":  "PM Kisan scheme lyi eligible haan, mere kol 3 acre zameen hai.",
-        "Odia":     "Ayushman Bharat scheme re eligible ki? Aamar family BPL list re ache.",
+        "Kannada":  "ಪಿಎಂ ಆವಾಸ್ ಯೋಜನೆಗೆ ಅರ್ಜಿ ಹಾಕಬೇಕು, ನಾನು BPL card ಹೊಂದಿದ್ದೇನೆ. Apply ಮಾಡುವುದು ಹೇಗೆ?",
+        "Hindi":    "पीएम किसान योजना के लिए मैं eligible हूँ क्या? मेरे पास 2 एकड़ ज़मीन है।",
+        "Tamil":    "ஆயுஷ்மான் பாரத் திட்டத்திற்கு நான் eligible ஆவேனா? என் குடும்பத்தில் 5 பேர் இருக்கிறோம்.",
+        "Telugu":   "ముద్రా లోన్ కోసం apply చేయాలి, నేను small business start చేయాలనుకుంటున్నాను.",
+        "Malayalam":"പിഎം ഉജ്ജ്വല യോജനക്ക് eligible ആണോ? ഞങ്ങൾ BPL family ആണ്.",
+        "Marathi":  "सुकन्या समृद्धी योजनेत account उघडायचे आहे, मुलगी 5 वर्षांची आहे.",
+        "Bengali":  "পিএম আবাস যোজনায় apply করতে চাই, আমার BPL card আছে।",
+        "Gujarati": "મુદ્રા loan માટે apply કરવું છે, મારો business 2 lakh નો છે.",
+        "Punjabi":  "ਪੀਐਮ ਕਿਸਾਨ scheme ਲਈ eligible ਹਾਂ, ਮੇਰੇ ਕੋਲ 3 acre ਜ਼ਮੀਨ ਹੈ।",
+        "Odia":     "ଆୟୁଷ୍ମାନ ଭାରତ scheme ରେ eligible କି? ଆମ family BPL list ରେ ଅଛି।",
     }
     SCRIPT_RANGES = {
         "Kannada":('\u0C80','\u0CFF'),"Hindi":('\u0900','\u097F'),
@@ -154,7 +154,7 @@ with tab1:
         st.info(f"**Sample:** *\"{default_text}\"*")
         st.caption("Real code-mixed query — mixes local script with English terms like 'eligible', 'apply', 'BPL card'")
 
-        if st.button("Generate audio with Bulbul v2", use_container_width=True):
+        if st.button("🔊 Generate audio with Bulbul v2", use_container_width=True):
             with st.spinner("Generating with Bulbul v2 TTS..."):
                 try:
                     tts = client.text_to_speech.convert(
@@ -179,7 +179,7 @@ with tab1:
         st.divider()
         st.markdown("**Step 2 — Transcribe with Saaras v3**")
 
-        if st.button("Transcribe in all 3 modes", use_container_width=True, type="primary"):
+        if st.button("🧠 Transcribe in all 3 modes", use_container_width=True, type="primary"):
             results = {}
             with st.spinner("Running Saaras v3..."):
                 for mode in ["transcribe","translate","codemix"]:
@@ -221,7 +221,7 @@ with tab1:
             st.divider()
             st.markdown("**Step 3 — Why this needs Sarvam (not just any STT)**")
             st.markdown(f"""<div class="gap-box">
-              <strong>The code-mixed problem</strong><br><br>
+              <strong>⚠️ The code-mixed problem</strong><br><br>
               Real users say <em>"PM Awas ke liye eligible hoon kya?"</em> — not clean Hindi or clean English.
               This spans two scripts. English-only models don't understand it. Generic Hindi models miss
               English terms like <em>eligible, apply, BPL card</em>.<br><br>
