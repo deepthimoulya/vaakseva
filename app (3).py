@@ -165,7 +165,7 @@ with tab1:
         tts_text = custom_text.strip() if custom_text.strip() else default_text
 
         if custom_text.strip():
-           st.caption("Using your question: " + tts_text)
+            st.caption("Using your question: " + tts_text)
 
         if st.button("🔊 Generate audio with Bulbul v2", use_container_width=True):
             with st.spinner("Generating with Bulbul v2 TTS..."):
@@ -256,7 +256,7 @@ with tab1:
                         resp = client.chat.completions(
                             model="sarvam-105b",
                             messages=[
-                                {"role":"system","content":f"You are a helpful Indian government scheme assistant. Answer eligibility questions based on:\n{SCHEME_KB}\nBe clear and specific. Mention documents needed."},
+                                {"role":"system","content":f"You are a helpful Indian government scheme assistant. Answer eligibility questions based on:\n{SCHEME_KB}\nBe clear and specific. Mention documents needed. IMPORTANT: Always respond in {lang_name} language. Use {lang_name} script for your answer."},
                                 {"role":"user","content":translate_text}
                             ]
                         )
@@ -286,9 +286,15 @@ with tab2:
         icon="ℹ️"
     )
 
+    DOC_LANG_NAMES = {
+        "hi-IN":"Hindi","kn-IN":"Kannada","ta-IN":"Tamil","te-IN":"Telugu",
+        "ml-IN":"Malayalam","mr-IN":"Marathi","bn-IN":"Bengali",
+        "gu-IN":"Gujarati","pa-IN":"Punjabi","or-IN":"Odia","en-IN":"English"
+    }
     doc_lang = st.selectbox("Document language", [
         "hi-IN","kn-IN","ta-IN","te-IN","ml-IN","mr-IN","bn-IN","gu-IN","pa-IN","or-IN","en-IN"
     ], index=1)
+    doc_lang_name = DOC_LANG_NAMES.get(doc_lang, "Kannada")
 
     uploaded_doc = st.file_uploader(
         "Upload document (PDF, PNG, JPG)",
@@ -375,7 +381,9 @@ Based on the document text provided, identify what information is available
 3. What additional documents they may need
 
 Use this scheme knowledge:
-{SCHEME_KB}"""},
+{SCHEME_KB}
+
+IMPORTANT: Respond in {doc_lang_name} language using {doc_lang_name} script."""},
                                 {"role":"user","content":f"Here is the extracted text from my document:\n\n{ocr_text}\n\nWhich government schemes am I eligible for?"}
                             ]
                         )
