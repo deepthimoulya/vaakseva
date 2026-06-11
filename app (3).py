@@ -270,7 +270,7 @@ with tab1:
 
             lo, hi = SCRIPT_RANGES.get(lang_name,('\u0C80','\u0CFF'))
             native_tokens = [w for w in codemix_text.split() if any(lo<=c<=hi for c in w)]
-            en_tokens     = [w for w in codemix_text.split() if w.replace("-","").isalpha() and all(ord(c)<128 for c in w) and not any(lo<=c<=hi for c in w)]
+            en_tokens     = [w for w in codemix_text.split() if w.isalpha() and all(ord(c)<128 for c in w)]
             native_html = "".join(f'<span class="tok-kn">{w}</span>' for w in native_tokens) or "<i>none</i>"
             en_html     = "".join(f'<span class="tok-en">{w}</span>' for w in en_tokens) or "<i>none</i>"
 
@@ -323,12 +323,7 @@ with tab2:
         "(PDF or image). Sarvam Vision extracts the text — then sarvam-105b tells you "
         "which schemes you may be eligible for."
     )
-    st.info(
-        "**Why Sarvam Vision?** Government documents in India are in regional scripts — "
-        "Kannada, Hindi, Tamil, Telugu. Global OCR models fail on these. "
-        "Sarvam Vision is trained on 22 Indian languages natively.",
-        icon="ℹ️"
-    )
+   
 
     DOC_LANG_NAMES = {
         "hi-IN":"Hindi","kn-IN":"Kannada","ta-IN":"Tamil","te-IN":"Telugu",
@@ -422,26 +417,41 @@ with tab2:
             if st.button("🏛️ Analyse document & check eligibility", use_container_width=True, type="primary"):
                 with st.spinner("sarvam-105b analysing document..."):
                     try:
+                        # Build prompt with ocr_text inline
+                        current_ocr = st.session_state.get("ocr_text", "")
+                        if not current_ocr.strip():
+                            st.error("No text found. Please extract text first.")
+                            st.stop()
+
+                        system_prompt = f"""You are a helpful Indian government scheme advisor for India.
+The user has shared details from their document. Based on these details:
+1. List which government schemes they are eligible for and why
+2. Tell them how to apply for each
+3. List documents they need
+
+Be specific. Keep under 250 words.
+
+Government schemes reference:
+{SCHEME_KB}
+
+IMPORTANT: You MUST respond in {doc_lang_name} language using {doc_lang_name} script only."""
+
+                        user_prompt = f"""My document details:
+{current_ocr}
+
+Based on these details, which government schemes am I eligible for? Please answer in {doc_lang_name}."""
+
                         resp = client.chat.completions(
                             model="sarvam-105b",
                             max_tokens=2000,
                             messages=[
-                                {"role":"system","content":f"""You are a helpful Indian government scheme advisor.
-Based on the document text provided, identify what information is available
-(name, income, category, family details etc.) and tell the person:
-1. Which government schemes they appear eligible for (list each with reason)
-2. What to do next to apply
-3. What additional documents they may need
-
-Keep your answer concise — under 250 words total.
-Use this scheme knowledge:
-{SCHEME_KB}
-
-IMPORTANT: Respond in {doc_lang_name} language using {doc_lang_name} script."""},
-                                {"role":"user","content":f"Here is the extracted text from my document:\n\n{ocr_text}\n\nWhich government schemes am I eligible for?"}
+                                {"role": "system", "content": system_prompt},
+                                {"role": "user", "content": user_prompt}
                             ]
                         )
                         answer = resp.choices[0].message.content
+                        if not answer or answer.strip().lower() == "none":
+                            answer = "ಮಾಹಿತಿ ಲಭ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ." if doc_lang_name == "Kannada" else "Please try again."
                         st.markdown(f"""<div class="answer-box">
                           <div style="font-size:.75rem;font-weight:600;color:#276749;margin-bottom:.75rem;">
                             🏛️ Scheme eligibility analysis
