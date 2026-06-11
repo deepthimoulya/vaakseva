@@ -1,0 +1,2 @@
+streamlit>=1.32.0
+sarvamai>=0.1.0
