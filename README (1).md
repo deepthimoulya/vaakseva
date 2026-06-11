@@ -30,7 +30,7 @@ This is **code-mixing** — the query spans Kannada script and English in the sa
 - Sarvam Vision extracts text from Indian-language documents
 - sarvam-105b determines which schemes you may be eligible for
 
-**Schemes covered:** PM Awas Yojana · PM Kisan · Ayushman Bharat · PM Ujjwala · Sukanya Samriddhi · MUDRA Loan · National Scholarship Portal
+**Schemes covered:** PM Awas Yojana · Ayushman Bharat · PM Ujjwala · National Scholarship Portal
 
 ---
 
