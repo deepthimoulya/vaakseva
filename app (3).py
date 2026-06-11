@@ -199,7 +199,7 @@ with tab1:
 
         # Allow user to type their own question
         custom_text = st.text_area(
-            "✏️ Or type your own question (in your language)",
+            "Or type your own question (in your language)",
             placeholder=f"e.g. {default_text}",
             height=80,
             help="Type in your own language — Kannada, Hindi, Tamil, Telugu etc. Mix with English words freely."
@@ -210,7 +210,7 @@ with tab1:
         if custom_text.strip():
             st.caption("Using your question: " + tts_text)
 
-        if st.button("🔊 Generate audio with Bulbul v2", use_container_width=True):
+        if st.button("Generate audio with Bulbul v2", use_container_width=True):
             with st.spinner("Generating with Bulbul v2 TTS..."):
                 try:
                     tts = client.text_to_speech.convert(
@@ -235,7 +235,7 @@ with tab1:
         st.divider()
         st.markdown("**Step 2 — Transcribe with Saaras v3**")
 
-        if st.button("🧠 Transcribe in all 3 modes", use_container_width=True, type="primary"):
+        if st.button("Transcribe in all 3 modes", use_container_width=True, type="primary"):
             results = {}
             with st.spinner("Running Saaras v3..."):
                 for mode in ["transcribe","translate","codemix"]:
