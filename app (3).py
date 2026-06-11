@@ -199,7 +199,7 @@ with tab1:
 
         # Allow user to type their own question
         custom_text = st.text_area(
-            "Or type your own question (in your language)",
+            "✏️ Or type your own question (in your language)",
             placeholder=f"e.g. {default_text}",
             height=80,
             help="Type in your own language — Kannada, Hindi, Tamil, Telugu etc. Mix with English words freely."
@@ -210,7 +210,7 @@ with tab1:
         if custom_text.strip():
             st.caption("Using your question: " + tts_text)
 
-        if st.button("Generate audio with Bulbul v2", use_container_width=True):
+        if st.button("🔊 Generate audio with Bulbul v2", use_container_width=True):
             with st.spinner("Generating with Bulbul v2 TTS..."):
                 try:
                     tts = client.text_to_speech.convert(
@@ -235,7 +235,7 @@ with tab1:
         st.divider()
         st.markdown("**Step 2 — Transcribe with Saaras v3**")
 
-        if st.button("Transcribe in all 3 modes", use_container_width=True, type="primary"):
+        if st.button("🧠 Transcribe in all 3 modes", use_container_width=True, type="primary"):
             results = {}
             with st.spinner("Running Saaras v3..."):
                 for mode in ["transcribe","translate","codemix"]:
@@ -298,9 +298,8 @@ with tab1:
                     try:
                         resp = client.chat.completions(
                             model="sarvam-105b",
-                            max_tokens=2000,
                             messages=[
-                                {"role":"system","content":f"You are a helpful Indian government scheme assistant. Answer eligibility questions based on:\n{SCHEME_KB}\nBe clear and specific. Mention documents needed. Keep answer under 200 words. IMPORTANT: Always respond in {lang_name} language. Use {lang_name} script for your answer."},
+                                {"role":"system","content":f"You are a helpful Indian government scheme assistant. Answer eligibility questions based on:\n{SCHEME_KB}\nBe specific and concise. Mention documents needed. IMPORTANT: Always respond in {lang_name} language."},
                                 {"role":"user","content":translate_text}
                             ]
                         )
@@ -323,7 +322,12 @@ with tab2:
         "(PDF or image). Sarvam Vision extracts the text — then sarvam-105b tells you "
         "which schemes you may be eligible for."
     )
-   
+    st.info(
+        "**Why Sarvam Vision?** Government documents in India are in regional scripts — "
+        "Kannada, Hindi, Tamil, Telugu. Global OCR models fail on these. "
+        "Sarvam Vision is trained on 22 Indian languages natively.",
+        icon="ℹ️"
+    )
 
     DOC_LANG_NAMES = {
         "hi-IN":"Hindi","kn-IN":"Kannada","ta-IN":"Tamil","te-IN":"Telugu",
@@ -423,27 +427,21 @@ with tab2:
                             st.error("No text found. Please extract text first.")
                             st.stop()
 
-                        system_prompt = f"""You are a helpful Indian government scheme advisor for India.
-The user has shared details from their document. Based on these details:
-1. List which government schemes they are eligible for and why
-2. Tell them how to apply for each
-3. List documents they need
+                        system_prompt = f"""You are an Indian government scheme advisor. 
+Based on the user's document details, list:
+1. Eligible schemes with one reason each
+2. How to apply (one line each)
+3. Key documents needed
 
-Be specific. Keep under 250 words.
+Be brief. Respond ONLY in {doc_lang_name} script."""
 
-Government schemes reference:
-{SCHEME_KB}
-
-IMPORTANT: You MUST respond in {doc_lang_name} language using {doc_lang_name} script only."""
-
-                        user_prompt = f"""My document details:
+                        user_prompt = f"""Document details:
 {current_ocr}
 
-Based on these details, which government schemes am I eligible for? Please answer in {doc_lang_name}."""
+Which schemes am I eligible for? Answer in {doc_lang_name} language."""
 
                         resp = client.chat.completions(
                             model="sarvam-105b",
-                            max_tokens=2000,
                             messages=[
                                 {"role": "system", "content": system_prompt},
                                 {"role": "user", "content": user_prompt}
