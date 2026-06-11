@@ -255,8 +255,9 @@ with tab1:
                     try:
                         resp = client.chat.completions(
                             model="sarvam-105b",
+                            max_tokens=2000,
                             messages=[
-                                {"role":"system","content":f"You are a helpful Indian government scheme assistant. Answer eligibility questions based on:\n{SCHEME_KB}\nBe clear and specific. Mention documents needed. IMPORTANT: Always respond in {lang_name} language. Use {lang_name} script for your answer."},
+                                {"role":"system","content":f"You are a helpful Indian government scheme assistant. Answer eligibility questions based on:\n{SCHEME_KB}\nBe clear and specific. Mention documents needed. Keep answer under 200 words. IMPORTANT: Always respond in {lang_name} language. Use {lang_name} script for your answer."},
                                 {"role":"user","content":translate_text}
                             ]
                         )
@@ -380,14 +381,16 @@ with tab2:
                     try:
                         resp = client.chat.completions(
                             model="sarvam-105b",
+                            max_tokens=2000,
                             messages=[
                                 {"role":"system","content":f"""You are a helpful Indian government scheme advisor.
 Based on the document text provided, identify what information is available
 (name, income, category, family details etc.) and tell the person:
-1. Which government schemes they appear eligible for
+1. Which government schemes they appear eligible for (list each with reason)
 2. What to do next to apply
 3. What additional documents they may need
 
+Keep your answer concise — under 250 words total.
 Use this scheme knowledge:
 {SCHEME_KB}
 
