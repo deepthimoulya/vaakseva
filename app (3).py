@@ -65,7 +65,8 @@ audio_path = None
 if input_mode == "Upload audio file":
     uploaded = st.file_uploader("Upload a .wav or .mp3 file", type=["wav", "mp3", "m4a", "ogg"])
     if uploaded:
-        tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
+        suffix = "." + uploaded.name.split(".")[-1] if "." in uploaded.name else ".mp3"
+        tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
         tmp.write(uploaded.read())
         tmp.close()
         audio_path = tmp.name
@@ -86,7 +87,7 @@ else:
     st.info(f"**Sample sentence:** *\"{default_text}\"*")
     st.caption("This is a real code-mixed sentence a speaker would say — mixing the local language with English.")
 
-    if st.button("🔊 Generate audio using Sarvam TTS", use_container_width=True):
+    if st.button("Generate audio using Sarvam TTS", use_container_width=True):
         with st.spinner("Generating audio with Bulbul v2..."):
             try:
                 tts_response = client.text_to_speech.convert(
@@ -95,13 +96,13 @@ else:
                     speaker="anushka"
                 )
                 audio_data = base64.b64decode(tts_response.audios[0])
-                tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
+                tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
                 tmp.write(audio_data)
                 tmp.close()
                 audio_path = tmp.name
                 st.session_state["audio_path"] = audio_path
                 st.session_state["sample_text"] = default_text
-                st.audio(audio_data, format="audio/wav")
+                st.audio(audio_data, format="audio/mp3")
                 st.success("Audio generated! Now transcribe it below.")
             except Exception as e:
                 st.error(f"TTS error: {e}")
@@ -114,14 +115,17 @@ if audio_path:
     st.divider()
     st.subheader("Step 2 — Transcribe with Saaras v3")
 
-    if st.button("🧠 Transcribe in all 3 modes", use_container_width=True, type="primary"):
+    if st.button("Transcribe in all 3 modes", use_container_width=True, type="primary"):
         results = {}
         with st.spinner("Running Saaras v3 in transcribe / translate / codemix modes..."):
             for mode in ["transcribe", "translate", "codemix"]:
                 try:
+                    ext = os.path.splitext(audio_path)[1].lstrip(".")
+                    mime = f"audio/{ext}" if ext else "audio/mp3"
                     with open(audio_path, "rb") as f:
+                        fname = os.path.basename(audio_path)
                         resp = client.speech_to_text.transcribe(
-                            file=f,
+                            file=(fname, f, mime),
                             model="saaras:v3",
                             mode=mode,
                             language_code=lang_code
@@ -166,7 +170,7 @@ if audio_path:
 
         st.markdown(f"""
         <div class="gap-box">
-          <strong>⚠️ Why code-mixed queries break RAG retrieval</strong><br><br>
+          <strong>Why code-mixed queries break RAG retrieval</strong><br><br>
           The codemix output <b>spans two scripts at once</b>. Standard embedding models
           are trained on single-language text — so this query lands in an ambiguous space
           that doesn't match cleanly against English <em>or</em> {lang_name} documents.<br><br>
@@ -203,7 +207,7 @@ if audio_path:
             height=140
         )
 
-        if st.button("💬 Get answer from sarvam-105b", use_container_width=True, type="primary"):
+        if st.button(" Get answer from sarvam-105b", use_container_width=True, type="primary"):
             with st.spinner("Thinking with sarvam-105b..."):
                 try:
                     response = client.chat.completions(
@@ -217,7 +221,7 @@ if audio_path:
                     st.markdown(f"""
                     <div class="answer-box">
                       <div style="font-size:0.75rem;font-weight:600;color:#1565c0;margin-bottom:0.5rem;">
-                        🤖 sarvam-105b answer (query: translated English)
+                        sarvam-105b answer (query: translated English)
                       </div>
                       <div style="font-size:1rem;line-height:1.7;">{answer}</div>
                     </div>
