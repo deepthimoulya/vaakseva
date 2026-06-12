@@ -118,7 +118,7 @@ SCHEME_KB = """
 """
 
 # ── Header ───────────────────────────────────────────────────
-st.markdown("#  VaakSeva")
+st.markdown("# VaakSeva")
 st.markdown("**Voice + Document assistant for Indian government schemes** — powered by Sarvam AI")
 st.caption("Ask about PM Awas, PM Kisan, Ayushman Bharat, Mudra Loan and more — in your own language")
 
@@ -296,10 +296,19 @@ with tab1:
             if st.button("Check eligibility", use_container_width=True, type="primary"):
                 with st.spinner("sarvam-105b checking eligibility..."):
                     try:
+                        SHORT_KB = """PM Awas Yojana: BPL families, SC/ST, income below 3 lakhs. Apply at Gram Panchayat.
+PM Kisan: Farmers with land. Rs 6000/year. Apply at pmkisan.gov.in.
+Ayushman Bharat: BPL families. Rs 5 lakh health cover. Apply at pmjay.gov.in.
+PM Ujjwala: BPL women. Free LPG. Apply at LPG distributor.
+Sukanya Samriddhi: Girl child below 10. 8.2% interest. Apply at post office.
+MUDRA Loan: Small business. Up to Rs 10 lakh. Apply at any bank.
+NSP Scholarship: SC/ST/OBC/Minority students, income below 2.5 lakh. Apply at scholarships.gov.in.
+PM Jan Dhan: Any unbanked citizen. Zero balance account. Apply at any bank.
+Atal Pension: Unorganised workers age 18-40. Rs 1000-5000 pension. Apply at bank."""
                         resp = client.chat.completions(
                             model="sarvam-105b",
                             messages=[
-                                {"role":"system","content":f"You are a helpful Indian government scheme assistant. Answer eligibility questions based on:\n{SCHEME_KB}\nBe specific and concise. Mention documents needed. IMPORTANT: Always respond in {lang_name} language."},
+                                {"role":"system","content":f"You are a government scheme advisor. Answer the user's eligibility question using this scheme info:\n{SHORT_KB}\nGive a direct, helpful answer. Respond in {lang_name} language only."},
                                 {"role":"user","content":translate_text}
                             ]
                         )
@@ -422,18 +431,17 @@ with tab2:
                             st.error("No text found. Please extract text first.")
                             st.stop()
 
-                        system_prompt = f"""You are an Indian government scheme advisor. 
-Based on the user's document details, list:
-1. Eligible schemes with one reason each
-2. How to apply (one line each)
-3. Key documents needed
-
-Be brief. Respond ONLY in {doc_lang_name} script."""
-
-                        user_prompt = f"""Document details:
-{current_ocr}
-
-Which schemes am I eligible for? Answer in {doc_lang_name} language."""
+                        SHORT_KB2 = """PM Awas Yojana: BPL families, SC/ST, income below 3 lakhs. Apply at Gram Panchayat.
+PM Kisan: Farmers with land. Rs 6000/year. Apply at pmkisan.gov.in.
+Ayushman Bharat: BPL families. Rs 5 lakh health cover. Apply at pmjay.gov.in.
+PM Ujjwala: BPL women. Free LPG. Apply at LPG distributor.
+Sukanya Samriddhi: Girl child below 10. 8.2% interest. Apply at post office.
+MUDRA Loan: Small business. Up to Rs 10 lakh. Apply at any bank.
+NSP Scholarship: SC/ST/OBC/Minority students, income below 2.5 lakh. Apply at scholarships.gov.in.
+PM Jan Dhan: Any unbanked citizen. Zero balance account. Apply at any bank.
+Atal Pension: Unorganised workers age 18-40. Rs 1000-5000 pension. Apply at bank."""
+                        system_prompt = f"You are a government scheme advisor. Based on the document details, tell the person which schemes they are eligible for and how to apply. Use this reference:\n{SHORT_KB2}\nRespond in {doc_lang_name} language only."
+                        user_prompt = f"My details from document:\n{current_ocr}\n\nWhich schemes am I eligible for?"
 
                         resp = client.chat.completions(
                             model="sarvam-105b",
@@ -447,7 +455,7 @@ Which schemes am I eligible for? Answer in {doc_lang_name} language."""
                             answer = "ಮಾಹಿತಿ ಲಭ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ." if doc_lang_name == "Kannada" else "Please try again."
                         st.markdown(f"""<div class="answer-box">
                           <div style="font-size:.75rem;font-weight:600;color:#276749;margin-bottom:.75rem;">
-                            🏛️ Scheme eligibility analysis
+                            Scheme eligibility analysis
                           </div>
                           <div style="font-size:1rem;line-height:1.8;">{answer}</div>
                         </div>""", unsafe_allow_html=True)
